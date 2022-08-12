@@ -32,9 +32,9 @@ async function findBySession(sessionId: string) {
 
 async function userExist(email: string, username: string) {
     let user = await userRepository.findByEmail(email);
-    if (user) throw { type: "conflict" };
+    if (user) throw { type: "conflict", message: "email exist" };
     user = await userRepository.findByUsername(username);
-    if (user) throw { type: "conflict" };
+    if (user) throw { type: "conflict", message: "username exist" };
 }
 
 async function verifyPassword(user: User, password: string) {

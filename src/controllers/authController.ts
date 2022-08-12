@@ -15,5 +15,8 @@ export async function signIn(req: Request, res: Response) {
     await userService.verifyPassword(user, password);
     const session = await sessionService.newSession(user);
     const token = await userService.generateToken(session);
-    res.send(token);
+    res.send({
+        token,
+        username: user.username,
+    });
 }

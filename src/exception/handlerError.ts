@@ -15,7 +15,7 @@ export default async function handlerError(
                 return res.sendStatus(404);
 
             case "conflict":
-                return res.sendStatus(409);
+                return res.status(409).send(error.message ?? "");
 
             case "unprocessableEntity":
                 return res.sendStatus(422);
