@@ -28,3 +28,79 @@ model Session {
 
   @@map("sessions")
 }
+
+model Leagues {
+  id           Int            @id @default(autoincrement())
+  name         String
+  Seasons      Seasons[]
+  Teams        Teams[]
+  Season_Teams Season_Teams[]
+}
+
+model Seasons {
+  id           Int            @id @default(autoincrement())
+  name         String
+  leagueId     Int
+  leagues      Leagues        @relation(fields: [leagueId], references: [id])
+  Season_Teams Season_Teams[]
+  Rounds       Rounds[]
+  Games        Games[]
+}
+
+model Teams {
+  id              Int               @id @default(autoincrement())
+  name            String
+  leagueId        Int
+  leagues         Leagues           @relation(fields: [leagueId], references: [id])
+  HomeGame        Games[]           @relation("HomeTeam_referred")
+  AwayGame        Games[]           @relation("AwayTeam_referred")
+  Games_Statistic Games_Statistic[]
+}
+
+model Season_Teams {
+  id       Int     @id @default(autoincrement())
+  seasonId Int
+  leagueId Int
+  leagues  Leagues @relation(fields: [leagueId], references: [id])
+  seasons  Seasons @relation(fields: [seasonId], references: [id])
+}
+
+model Rounds {
+  id       Int     @id @default(autoincrement())
+  seasonId Int
+  number   Int
+  seasons  Seasons @relation(fields: [seasonId], references: [id])
+  Games    Games[]
+}
+
+model Games {
+  id              Int               @id @default(autoincrement())
+  roundId         Int
+  seasonId        Int
+  homeTeamId      Int
+  awayTeamId      Int
+  date            DateTime
+  done            Boolean
+  rounds          Rounds            @relation(fields: [roundId], references: [id])
+  seasons         Seasons           @relation(fields: [seasonId], references: [id])
+  homeTeam        Teams             @relation("HomeTeam_referred", fields: [homeTeamId], references: [id])
+  awayTeam        Teams             @relation("AwayTeam_referred", fields: [awayTeamId], references: [id])
+  Games_Statistic Games_Statistic[]
+}
+
+model Games_Statistic {
+  id            Int   @id @default(autoincrement())
+  gameId        Int
+  teamId        Int
+  goals         Int
+  kicks         Int
+  ballPossesion Int
+  pases         Int
+  passAcurracy  Int
+  faults        Int
+  yellowCards   Int
+  impediments   Int
+  corners       Int
+  games         Games @relation(fields: [gameId], references: [id])
+  teams         Teams @relation(fields: [teamId], references: [id])
+}
