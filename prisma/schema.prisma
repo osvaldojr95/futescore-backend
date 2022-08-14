@@ -54,6 +54,7 @@ model Teams {
   id              Int               @id @default(autoincrement())
   name            String
   leagueId        Int
+  shieldURL       String
   leagues         Leagues           @relation(fields: [leagueId], references: [id])
   HomeGame        Games[]           @relation("HomeTeam_referred")
   AwayGame        Games[]           @relation("AwayTeam_referred")
