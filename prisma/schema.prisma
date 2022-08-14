@@ -30,11 +30,12 @@ model Session {
 }
 
 model Leagues {
-  id           Int            @id @default(autoincrement())
-  name         String
-  Seasons      Seasons[]
-  Teams        Teams[]
-  Season_Teams Season_Teams[]
+  id      Int       @id @default(autoincrement())
+  name    String
+  Seasons Seasons[]
+  Teams   Teams[]
+
+  @@map("leagues")
 }
 
 model Seasons {
@@ -42,9 +43,11 @@ model Seasons {
   name         String
   leagueId     Int
   leagues      Leagues        @relation(fields: [leagueId], references: [id])
-  Season_Teams Season_Teams[]
   Rounds       Rounds[]
   Games        Games[]
+  Season_Teams Season_Teams[]
+
+  @@map("seasons")
 }
 
 model Teams {
@@ -55,14 +58,19 @@ model Teams {
   HomeGame        Games[]           @relation("HomeTeam_referred")
   AwayGame        Games[]           @relation("AwayTeam_referred")
   Games_Statistic Games_Statistic[]
+  Season_Teams    Season_Teams[]
+
+  @@map("teams")
 }
 
 model Season_Teams {
   id       Int     @id @default(autoincrement())
   seasonId Int
-  leagueId Int
-  leagues  Leagues @relation(fields: [leagueId], references: [id])
+  teamId   Int
+  teams    Teams   @relation(fields: [teamId], references: [id])
   seasons  Seasons @relation(fields: [seasonId], references: [id])
+
+  @@map("season_teams")
 }
 
 model Rounds {
@@ -71,6 +79,8 @@ model Rounds {
   number   Int
   seasons  Seasons @relation(fields: [seasonId], references: [id])
   Games    Games[]
+
+  @@map("rounds")
 }
 
 model Games {
@@ -79,13 +89,14 @@ model Games {
   seasonId        Int
   homeTeamId      Int
   awayTeamId      Int
-  date            DateTime
   done            Boolean
   rounds          Rounds            @relation(fields: [roundId], references: [id])
   seasons         Seasons           @relation(fields: [seasonId], references: [id])
   homeTeam        Teams             @relation("HomeTeam_referred", fields: [homeTeamId], references: [id])
   awayTeam        Teams             @relation("AwayTeam_referred", fields: [awayTeamId], references: [id])
   Games_Statistic Games_Statistic[]
+
+  @@map("games")
 }
 
 model Games_Statistic {
@@ -93,14 +104,16 @@ model Games_Statistic {
   gameId        Int
   teamId        Int
   goals         Int
-  kicks         Int
-  ballPossesion Int
-  pases         Int
-  passAcurracy  Int
-  faults        Int
-  yellowCards   Int
-  impediments   Int
-  corners       Int
+  kicks         Int?
+  ballPossesion Int?
+  passes        Int?
+  passAcurracy  Int?
+  faults        Int?
+  yellowCards   Int?
+  impediments   Int?
+  corners       Int?
   games         Games @relation(fields: [gameId], references: [id])
   teams         Teams @relation(fields: [teamId], references: [id])
+
+  @@map("games_statistic")
 }
