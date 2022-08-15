@@ -1,9 +1,11 @@
 import seasonRepository from "../repository/seasonRepository.js";
 
 async function findTeams(id: number) {
-    const teams = await seasonRepository.findTeams(id);
+    let teams = await seasonRepository.findTeams(id);
     if (!teams) throw { type: "notFound" };
-    return teams;
+    return teams.map((item) => {
+        return item.teams;
+    });
 }
 
 export default {

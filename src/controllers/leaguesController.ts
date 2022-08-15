@@ -3,5 +3,5 @@ import leaguesService from "../services/leaguesService.js";
 
 export async function getAll(req: Request, res: Response) {
     const leagues = await leaguesService.findAll();
-    res.send(leagues);
+    res.send({leagues});
 }
